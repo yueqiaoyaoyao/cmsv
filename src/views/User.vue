@@ -23,14 +23,30 @@
       <el-table-column prop="uid" label="用户id"/>
       <el-table-column prop="userName" label="用户名"/>
       <el-table-column prop="nickName" label="昵称" />
-      <el-table-column prop="userType" label="用户类型" />
-      <el-table-column prop="sex" label="性别" />
+
+      <el-table-column label="用户类型" >
+        <template #default = "scope">
+          <span v-if="scope.row.userType === '1'">普通用户</span>
+          <span v-if="scope.row.userType === '0'">管理员</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="性别" >
+        <template #default = "scope">
+          <span v-if="scope.row.sex === '1'">男</span>
+          <span v-if="scope.row.sex === '0'">女</span>
+          <span v-if="scope.row.sex === '' || scope.row.sex === '2'">未知</span>
+        </template>
+      </el-table-column>
+
+
       <el-table-column prop="phone" label="电话" />
       <el-table-column prop="email" label="邮箱" />
       <el-table-column prop="address" label="地址" />
-      <el-table-column label="操作" width="200">
+      <el-table-column label="操作" width="270">
         <template #default="scope">
           <el-button  type="primary" plain @click="handleEdit(scope.row)">编辑</el-button>
+          <el-button  type="primary" plain @click="Auth(scope.row)">授权</el-button>
           <el-popconfirm title="确定删除吗？" @confirm="handleDelete(scope.row.uid)">
             <template #reference>
               <el-button  type="danger">删除</el-button>
@@ -152,6 +168,7 @@
 
 import request from "@/utils/request";
 import {ElMessage} from "element-plus";
+import router from "@/router";
 
 export default {
   name: 'HomeView',
@@ -231,8 +248,10 @@ export default {
         request.post("/user/add",this.form).then(res => {
           console.log(res)
           let type;
-          if(res.code === 200)
+          if(res.code === 200) {
             type = "success"
+            this.load()
+          }
           else
             type = "error"
           ElMessage({
@@ -242,7 +261,6 @@ export default {
           })
         })
       }
-      this.load()
       this.dialogVisible=false;
     },
     update(){
@@ -250,8 +268,10 @@ export default {
       request.put("/user/update",this.form).then(res => {
         console.log(res)
         let type;
-        if(res.code === 200)
+        if(res.code === 200) {
           type = "success"
+          this.load()
+        }
         else
           type = "error"
         ElMessage({
@@ -260,8 +280,12 @@ export default {
           type: type,
         })
       })
-      this.load()
       this.dialogVisible1=false;
+    },
+    Auth(row){
+      sessionStorage.setItem("authUid",row.uid)
+      sessionStorage.setItem("authName",row.userName)
+      router.push('/role')
     }
   }
 }

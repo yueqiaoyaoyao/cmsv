@@ -13,7 +13,7 @@
           <el-dropdown-menu>
             <el-dropdown-item >个人信息</el-dropdown-item>
             <el-dropdown-item >修改密码</el-dropdown-item>
-            <el-dropdown-item >退出系统</el-dropdown-item>
+            <el-dropdown-item @click="exit">退出系统</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -23,8 +23,18 @@
 </template>
 
 <script>
+import router from "@/router";
+import request from "@/utils/request";
+
 export default {
-  name: "Header"
+  name: "Header",
+  methods:{
+    exit(){
+      localStorage.setItem("token","")
+      request.delete("/user/logout")
+      router.push("/login")
+    }
+  }
 }
 </script>
 

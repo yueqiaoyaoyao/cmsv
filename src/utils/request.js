@@ -7,7 +7,12 @@ const request = axios.create({
 
 request.interceptors.request.use(config => {
     config.headers['Content-Type'] = 'application/json;charset=utf-8';
-    config.headers['token'] = 'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJlNmVjM2E1ZmVmNTA0ZTZlYTgzMzhmOGM0ZjI1ZWM5MSIsInN1YiI6IjEiLCJpc3MiOiJzZyIsImlhdCI6MTY1ODgyMTgzOCwiZXhwIjoxNjU4ODI1NDM4fQ.V-woP4NLyWCTjkXR1QYBW2wPWnL5utJ-4GMbumRqlFg';
+    // config.headers['token'] = 'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI5MzUyODhiZTg1MzQ0ZGY1OTg0ZTA3NWU5NjA1ZDdiZCIsInN1YiI6IjEiLCJpc3MiOiJzZyIsImlhdCI6MTY1ODgzODgzNSwiZXhwIjoxNjU4ODQyNDM1fQ.adSUgwO2QNiAUg5zPEVjNqoTRFW-pjYDDhi0XjZybas'
+    let token;
+    token =  localStorage.getItem('token')
+    if(token != null || token === ""){
+        config.headers['token'] = token
+    }
     return config
 }, error => {
     return Promise.error(error)
